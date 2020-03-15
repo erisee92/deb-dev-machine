@@ -944,7 +944,7 @@ if [[ ${installedZsh} -eq 1 ]]; then
 
     cd ~/ || exit;
     curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
-    curlToFile ${repoUrl}"zsh/agnoster.zsh-theme" ".oh-my-zsh/themes/agnoster.zsh-theme";
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k;
     # shellcheck source=/dev/null
     source ~/.zshrc;
 
