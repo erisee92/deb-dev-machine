@@ -10,8 +10,9 @@ versionSops="3.1.1";
 versionDapp="0.27.14";
 versionNode="12";
 versionPopcorn="0.3.10";
-versionPhpStorm="2019.3.3";
+versionJetbrains="2019.3.3";
 versionDockerCompose="1.24.1";
+versionJDK="13.0.1";
 
 # Disallow running with sudo or su
 ##########################################################
@@ -66,6 +67,7 @@ installedPhp=0;
 installedNode=0;
 installedSublime=0;
 installedMySqlServer=0;
+installedSDKMAN=0;
 repoUrl="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
 
 ###############################################################
@@ -581,8 +583,8 @@ installSublime() {
 # PHP Storm
 ##########################################################
 installPhpStorm() {
-    title "Installing PhpStorm IDE ${versionPhpStorm}";
-    curlToFile "https://download.jetbrains.com/webide/PhpStorm-${versionPhpStorm}.tar.gz" "phpstorm.tar.gz";
+    title "Installing PhpStorm IDE ${versionJetbrains}";
+    curlToFile "https://download.jetbrains.com/webide/PhpStorm-${versionJetbrains}.tar.gz" "phpstorm.tar.gz";
     sudo tar xfz ~/phpstorm.tar.gz;
 
     sudo rm -rf /opt/phpstorm/;
@@ -593,6 +595,42 @@ installPhpStorm() {
 
     notify "Adding desktop file for PhpStorm";
     curlToFile ${repoUrl}"desktop/jetbrains-phpstorm.desktop" "/usr/share/applications/jetbrains-phpstorm.desktop";
+    breakLine;
+}
+
+# WebStorm
+##########################################################
+installWebStorm() {
+    title "Installing WebStorm IDE ${versionJetbrains}";
+    curlToFile "https://download.jetbrains.com/webstorm/WebStorm-${versionJetbrains}.tar.gz" "webstorm.tar.gz";
+    sudo tar xfz ~/webstorm.tar.gz;
+
+    sudo rm -rf /opt/webstorm/;
+    sudo mkdir /opt/webstorm/;
+    sudo mv ~/WebStorm-*/* /opt/webstorm/;
+    sudo rm -rf ~/webstorm.tar.gz;
+    sudo rm -rf ~/WebStorm-*;
+
+    notify "Adding desktop file for WebStorm";
+    curlToFile ${repoUrl}"desktop/jetbrains-webstorm.desktop" "/usr/share/applications/jetbrains-webstorm.desktop";
+    breakLine;
+}
+
+# IntelliJ IDEA
+##########################################################
+installIdea() {
+    title "Installing IntelliJ IDEA ${versionJetbrains}";
+    curlToFile "https://download.jetbrains.com/idea/ideaIU-${versionJetbrains}.tar.gz" "idea.tar.gz";
+    sudo tar xfz ~/idea.tar.gz;
+
+    sudo rm -rf /opt/idea/;
+    sudo mkdir /opt/idea/;
+    sudo mv ~/idea-*/* /opt/idea/;
+    sudo rm -rf ~/idea.tar.gz;
+    sudo rm -rf ~/idea-*;
+
+    notify "Adding desktop file for IntelliJ IDEA";
+    curlToFile ${repoUrl}"desktop/jetbrains-idea.desktop" "/usr/share/applications/jetbrains-idea.desktop";
     breakLine;
 }
 
@@ -663,6 +701,25 @@ installMySqlServer() {
     breakLine;
 }
 
+# SDKMAN
+###########################################################
+installSDKMAN() {
+  title "Installing SDKMAN!";
+  curl -s "https://get.sdkman.io" | bash;
+  notify "Initialize SDKMAN!";
+  source "$HOME/.sdkman/bin/sdkman-init.sh";
+  installedSDKMAN=1;
+  breakLine;
+}
+
+# OpenJDK
+############################################################
+installOpenJDK() {
+  title "Installing OpenJDK ${versionJDK}";
+  sdk install java ${versionJDK}-open;
+  breakLine;
+}
+
 ###############################################################
 ## MAIN PROGRAM
 ###############################################################
@@ -676,40 +733,44 @@ cmd=(dialog --backtitle "Debian Developer Container - USAGE: <space> select/un-s
 --checklist "Select installable packages:" 42 50 50);
 
 options=(
-    01 "Git" on
-    02 "Node v${versionNode}" on
-    03 "PHP v${versionPhp} with PECL" on
-    04 "Ruby with DAPP v${versionDapp}" on
+    01 "Git" off
+    02 "Node v${versionNode}" off
+    03 "PHP v${versionPhp} with PECL" off
+    04 "Ruby with DAPP v${versionDapp}" off
     05 "Python" off
     06 "GoLang v${versionGo}" off
-    07 "Yarn (package manager)" on
-    08 "Composer (package manager)" on
-    09 "React Native" on
-    10 "Apache Cordova" on
-    11 "Phonegap" on
-    12 "Webpack" on
-    13 "Memcached server" on
-    14 "Redis server" on
+    07 "Yarn (package manager)" off
+    08 "Composer (package manager)" off
+    09 "React Native" off
+    10 "Apache Cordova" off
+    11 "Phonegap" off
+    12 "Webpack" off
+    13 "Memcached server" off
+    14 "Redis server" off
     15 "Docker CE (with docker compose)" off
     16 "Kubernetes (Kubectl)" off
-    17 "Helm v${versionHelm}" on
-    18 "Sops v${versionSops}" on
-    19 "Postman" on
-    20 "Laravel installer" on
+    17 "Helm v${versionHelm}" off
+    18 "Sops v${versionSops}" off
+    19 "Postman" off
+    20 "Laravel installer" off
     21 "Wine" off
-    22 "MySql Community Server" on
-    23 "SQLite (database tool)" on
+    22 "MySql Community Server" off
+    23 "SQLite (database tool)" off
     24 "DBeaver (database tool)" off
-    25 "Redis Desktop Manager" on
+    25 "Redis Desktop Manager" off
     26 "Atom IDE" off
     27 "VS Code IDE" off
-    28 "Sublime Text IDE" on
-    29 "PhpStorm IDE v${versionPhpStorm}" off
-    30 "Software Center" on
+    28 "Sublime Text IDE" off
+    29 "PhpStorm IDE v${versionJetbrains}" off
+    30 "Software Center" off
     31 "Remmina (Remote Desktop Client)" off
     32 "Google Cloud SDK" off
     33 "Popcorn Time v${versionPopcorn}" off
-    34 "ZSH Terminal Plugin" on
+    34 "ZSH Terminal Plugin" off
+    35 "WebStorm IDE v${versionJetbrains}" off
+    36 "IntelliJ IDEA IDE v${versionJetbrains}" off
+    37 "SDKMAN!" off
+    38 "OpenJDK" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -738,7 +799,8 @@ title "Installing Pre-Requisite Packages";
     libssl-dev \
     nano \
     vim \
-    snapd;
+    zip \
+    unzip;
 
     if [[ ${versionDeb} = "stretch" ]]; then
       sudo apt install -y preload gksu;
@@ -849,6 +911,15 @@ do
         32) installGoogleSdk ;;
         33) installPopcorn ;;
         34) installZsh ;;
+        35) installWebStorm ;;
+        36) installIdea ;;
+        37) installSDKMAN ;;
+        38)
+            if [[ ${installedSDKMAN} -ne 1 ]]; then
+                installSDKMAN;
+            fi
+            installOpenJDK;
+        ;;
     esac
 done
 
