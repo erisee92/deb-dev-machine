@@ -12,7 +12,7 @@ versionNode="12";
 versionPopcorn="0.3.10";
 versionJetbrains="2019.3.3";
 versionDockerCompose="1.24.1";
-versionJDK="13.0.1";
+versionJDK="11.0.6";
 
 # Disallow running with sudo or su
 ##########################################################
@@ -715,8 +715,8 @@ installSDKMAN() {
 # OpenJDK
 ############################################################
 installOpenJDK() {
-  title "Installing OpenJDK ${versionJDK}";
-  sdk install java ${versionJDK}-open;
+  title "Installing AdoptOpenJDK ${versionJDK}";
+  sdk install java ${versionJDK}.j9-adpt;
   breakLine;
 }
 
