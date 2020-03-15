@@ -68,7 +68,7 @@ installedNode=0;
 installedSublime=0;
 installedMySqlServer=0;
 installedSDKMAN=0;
-repoUrl="https://raw.githubusercontent.com/andrewbrg/deb-dev-machine/master/";
+repoUrl="https://raw.githubusercontent.com/erisee92/deb-dev-machine/master/";
 
 ###############################################################
 ## REPOSITORIES
