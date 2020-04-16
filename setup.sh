@@ -10,9 +10,9 @@ versionSops="3.1.1";
 versionDapp="0.27.14";
 versionNode="12";
 versionPopcorn="0.3.10";
-versionJetbrains="2019.3.3";
+versionJetbrains="2020.1";
 versionDockerCompose="1.24.1";
-versionJDK="11.0.6";
+versionJDK="11";
 
 # Disallow running with sudo or su
 ##########################################################
@@ -51,6 +51,7 @@ breakLine() {
 notify() {
     printf "\n";
     printf "\033[1;46m %s \033[0m" "$1";
+    printf "\n";
 }
 
 curlToFile() {
@@ -716,7 +717,7 @@ installSDKMAN() {
 ############################################################
 installOpenJDK() {
   title "Installing AdoptOpenJDK ${versionJDK}";
-  sdk install java ${versionJDK}.j9-adpt;
+  sdk install java $(sdk list java | grep -Eo "${versionJDK}\.([0-9]+\.){2}j9-adpt");
   breakLine;
 }
 
@@ -770,7 +771,7 @@ options=(
     35 "WebStorm IDE v${versionJetbrains}" off
     36 "IntelliJ IDEA IDE v${versionJetbrains}" off
     37 "SDKMAN!" off
-    38 "OpenJDK" off
+    38 "JDK ${versionJDK}" off
 );
 
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty);
@@ -944,7 +945,9 @@ if [[ ${installedZsh} -eq 1 ]]; then
 
     cd ~/ || exit;
     curlToFile ${repoUrl}"zsh/.zshrc" ".zshrc";
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k;
+    sudo chown $USER:$USER .zshrc;
+    
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k;
     # shellcheck source=/dev/null
     source ~/.zshrc;
 
